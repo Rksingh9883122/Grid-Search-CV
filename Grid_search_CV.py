@@ -8,6 +8,14 @@ import mlflow.sklearn
 
 
 
+# Set the tracking URI to point to the server
+mlflow.set_tracking_uri("http://localhost:5000")
+
+# Set the experiment name
+mlflow.set_experiment("Iris SVM Experiment")
+
+
+
 iris = load_iris()
 X, y = iris.data, iris.target
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
