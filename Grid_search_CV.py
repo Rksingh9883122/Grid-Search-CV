@@ -3,6 +3,10 @@ import sklearn
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.svm import SVC
+import mlflow
+import mlflow.sklearn
+
+
 
 iris = load_iris()
 X, y = iris.data, iris.target
