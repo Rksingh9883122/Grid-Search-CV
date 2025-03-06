@@ -21,11 +21,28 @@ param_grid = {
 
 grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=5, scoring='accuracy')
 
-grid_search.fit(X_train, y_train)
+# Start an MLflow run
+with mlflow.start_run():
+    grid_search.fit(X_train, y_train)
 
-print("Best parameters found: ", grid_search.best_params_)
-print("Best cross-validation accuracy: ", grid_search.best_score_)
+    # Log the best parameters and best score
+    mlflow.log_params(grid_search.best_params_)
+    mlflow.log_metric("best_cross_val_accuracy", grid_search.best_score_)
 
-best_model = grid_search.best_estimator_
-test_accuracy = best_model.score(X_test, y_test)
-print("Test set accuracy: ", test_accuracy)
+    # Train the model with the best hyperparameters
+    best_model = grid_search.best_estimator_
+
+    # Evaluate the model on the test set
+    test_accuracy = best_model.score(X_test, y_test)
+    mlflow.log_metric("test_accuracy", test_accuracy)
+
+    # Log the model
+    mlflow.sklearn.log_model(best_model, "model")
+
+    print("Best parameters found: ", grid_search.best_params_)
+    print("Best cross-validation accuracy: ", grid_search.best_score_)
+    print("Test set accuracy: ", test_accuracy)
+
+    best_model = grid_search.best_estimator_
+    test_accuracy = best_model.score(X_test, y_test)
+    print("Test set accuracy: ", test_accuracy)
